@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import './App.css';
 
 function App() {
@@ -37,6 +38,9 @@ const series = [
     <div className="App">
       <header className="App-header">
         <h1>Duetsche Welle - Made for minds</h1>
+        <Counter></Counter>
+        <Posts></Posts>
+        <Users></Users>
         {
           journalists.map(journalist => <Journalists journalist = {journalist}></Journalists>)
         }
@@ -46,8 +50,6 @@ const series = [
         {
           products.map(product => <Product details = {product}></Product>)
         }
-        {/* <Series name = "Game of Thrones" dialog = "Winter is coming"></Series>
-        <Series name = "Person of Interest" dialog = "You are being watched"></Series> */}
         {
           series.map(series => <Series details = {series}></Series>)
         }
@@ -115,5 +117,52 @@ function Journalists(props) {
   )
 }
 
+function Counter() {
+  // useState, 2 parameters one holds the value other is a function allows to set the value
+  const [count, setCount] = useState(0);
+  return (
+    <div>
+      <h1>Count: {count}</h1>
+      <button onClick = {() => setCount(count+1)}>Increase</button>
+      <button onClick = {() => setCount(count-1)}>Decrease</button>
+    </div>
+  )
+}
+
+function Users() {
+  const [users, setUsers] = useState([]);
+  useEffect(()=>{
+    fetch("https://jsonplaceholder.typicode.com/users")
+    .then(response => response.json())
+    .then(data => setUsers(data));
+  }, []);
+  return (
+    <div>
+      <h3>Dynamic Users {users.length}</h3>
+      <ul>
+        {
+          users.map(user => <li>{user.name} - {user.email}</li>)
+        }
+      </ul>
+    </div>
+  )
+}
+
+function Posts() {
+  const [posts, setPosts] = useState([]);
+  useEffect(()=>{
+    fetch("https://jsonplaceholder.typicode.com/posts")
+    .then(response => response.json())
+    .then(data => setPosts(data));
+  })
+  return (
+    <div>
+      <h3>Total Posts: {posts.length}</h3>
+      {
+        posts.map(post => <h5>{post.title}</h5>)
+      }
+    </div>
+  )
+}
 
 export default App;
